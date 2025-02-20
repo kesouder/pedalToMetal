@@ -161,3 +161,31 @@
 
     // end of map.on('load')    
     });
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const timeSlider = document.getElementById('timeSlider');
+        const selectedTime = document.getElementById('selectedTime');
+        const anyTime = document.getElementById('anyTime');
+    
+        function updateTimeDisplay(value) {
+            if (value == -1) {
+                selectedTime.textContent = '11:59 PM';
+                anyTime.style.display = 'block';
+            } else {
+                const hours = Math.floor(value / 60);
+                const minutes = value % 60;
+                const period = hours >= 12 ? 'PM' : 'AM';
+                const formattedHours = hours % 12 === 0 ? 12 : hours % 12;
+                const formattedMinutes = minutes.toString().padStart(2, '0');
+                selectedTime.textContent = `${formattedHours}:${formattedMinutes} ${period}`;
+                anyTime.style.display = 'block';
+            }
+        }
+    
+        timeSlider.addEventListener('input', () => {
+            updateTimeDisplay(timeSlider.value);
+        });
+    
+        // Trigger the input event to set the initial state
+        updateTimeDisplay(timeSlider.value);
+    });

@@ -12,9 +12,17 @@
 </head>
 <body>
 
-    <h1>🚴🏼‍♀️ Bikewatching</h1>
+    <header>
+        <h1>🚴🏼‍♀️ Bikewatching</h1>
+        <label>
+            Filter by time:
+            <input type="range" id="timeSlider" min="-1" max="1440" value="-1">
+            <time id="selectedTime"></time>
+            <em id="anyTime">(any time)</em>
+        </label>
+    </header>
 
-    <p> Project to see the traffic trends of bicyclists in the Boston area </p>
+    <p> See the traffic trends of bicyclists in the Boston area throughout the day!</p>
     <div id="map">
         <svg></svg>
     </div>

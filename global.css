@@ -9,6 +9,42 @@ body {
     padding: 1em;
   }
 
+header {
+    display: flex;
+    justify-content: space-between; /* Pushes h1 to the left and label to the right */
+    align-items: baseline;
+    width: 100%; /* Ensure header takes full width */
+    padding: 0 1em; /* Optional: Add some padding to the sides */
+}
+
+header label{
+    margin-left: auto;
+    position: relative;
+}
+
+input[type="range"] {
+    width: calc(110% - 2em); /* Set the width of the slider */
+    margin-right: 1em; /* Add some margin to the right */
+}
+
+#selectedTime {
+    display: block;
+    position: absolute; /* Position it absolutely within the label */
+    right: 0; /* Align it to the right end */
+    top: 120%; /* Adjust the vertical position */
+    transform: translateY(-50%);
+}
+
+#anyTime {
+    display: block;
+    color: #888; /* Lighter color */
+    font-style: italic; /* Italic style */
+    position: absolute; /* Position it absolutely within the label */
+    right: 0; /* Align it to the right end */
+    top: 170%; /* Center it vertically */
+    transform: translateY(-50%);
+}
+
   #tooltip {
     position: absolute;
     background: white; 
