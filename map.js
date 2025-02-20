@@ -14,7 +14,7 @@
 
     const svg = d3.select('#map').select('svg');
     let stations = [];
-    let circles; // Declare circles in a higher scope
+    let circles; // Declare circles in a higher scope from step 3.3
 
     function getCoords(station) { // map.project is built into mapboxgl
         const point = new mapboxgl.LngLat(+station.lon, +station.lat);  // Convert lon/lat to Mapbox LngLat
@@ -67,30 +67,74 @@
           
           stations = jsonData.data.stations;
           console.log('Stations Array:', stations);
-            
-          // Append circles to the SVG for each station
-          circles = svg.selectAll('circle')
-                .data(stations)
-                .enter()
-                .append('circle')
-                .attr('r', 5)               // Radius of the circle
-                .attr('fill', 'steelblue')  // Circle fill color
-                .attr('stroke', 'white')    // Circle border color
-                .attr('stroke-width', 1)    // Circle border thickness
-                .attr('opacity', 0.8);      // Circle opacity
 
-            // Initial position update when map loads
-            updatePositions();
+                  // step 4
+          trips = d3.csv('https://dsc106.com/labs/lab07/data/bluebikes-traffic-2024-03.csv')
+            .then(trips => {
+                const departures = d3.rollup(
+                    trips,
+                    (v) => v.length,
+                    (d) => d.start_station_id,
+                );
+                const arrivals = d3.rollup(
+                    trips,
+                    (v) => v.length,
+                    (d) => d.end_station_id,
+                );
+                console.log('Departures:', departures);
+                console.log('Arrivals:', arrivals);
+                
+                stations = stations.map((station) => {
+                    let id = station.short_name;
+                    station.arrivals = arrivals.get(id) ?? 0;
+                    // TODO departures
+                    station.departures = departures.get(id) ?? 0;
+                    // TODO totalTraffic
+                    station.totalTraffic = station.arrivals + station.departures;
+                    return station;
+                    
+                });
 
-            // Reposition markers on map interactions
-            map.on('move', updatePositions);     // Update during map movement
-            map.on('zoom', updatePositions);     // Update during zooming
-            map.on('resize', updatePositions);   // Update on window resize
-            map.on('moveend', updatePositions);  // Final adjustment after movement ends
+                const radiusScale = d3
+                    .scaleSqrt()
+                    .domain([0, d3.max(stations, (d) => d.totalTraffic)])
+                    .range([0, 25]);
+                
+              // Append circles to the SVG for each station
+              circles = svg.selectAll('circle')
+                    .data(stations)
+                    .enter()
+                    .append('circle')
+                    .attr('r',d => radiusScale(d.totalTraffic))               // Radius of the circle
+                    .attr('fill', 'steelblue')  // Circle fill color
+                    .attr('stroke', 'white')    // Circle border color
+                    .attr('stroke-width', 1)    // Circle border thickness
+                    .attr('opacity', 0.8)      // Circle opacity
+                    .each(function(d) { // iterates over each circle
+                        // Add <title> for browser tooltips
+                        d3.select(this)
+                          .append('title') //appends a title elements
+                          .text(`${d.totalTraffic} trips (${d.departures} departures, ${d.arrivals} arrivals)`);
+                      }); 
+    
+                // Initial position update when map loads
+                updatePositions();
+    
+                // Reposition markers on map interactions
+                map.on('move', updatePositions);     // Update during map movement
+                map.on('zoom', updatePositions);     // Update during zooming
+                map.on('resize', updatePositions);   // Update on window resize
+                map.on('moveend', updatePositions);  // Final adjustment after movement ends
+
+            })
+            .catch(error => {
+                console.error('Error loading CSV:', error);  // Handle errors if CSV loading fails
+            });
 
         }).catch(error => {
           console.error('Error loading JSON:', error);  // Handle errors if JSON loading fails
         });
+
+
+    // end of map.on('load')    
     });
-
-
