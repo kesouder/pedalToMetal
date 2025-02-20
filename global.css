@@ -8,3 +8,25 @@ body {
     margin: auto;
     padding: 1em;
   }
+
+  #tooltip {
+    position: absolute;
+    background: white; 
+    border: 1px solid #ff7e5f; /* Vibrant border color */
+    padding: 10px;
+    border-radius: 8px; /* More rounded corners */
+    pointer-events: none;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); /* Slightly larger shadow */
+    font-size: 14px; /* Slightly larger font */
+    font-family: 'Arial', sans-serif; /* Change font */
+    color: black; /* White text color */
+    z-index: 10;
+    /* transition: opacity 0.3s ease, transform 0.3s ease; Smooth transition for opacity and transform */
+    opacity: 0; /* Initially hidden */
+    transform: translateY(-10px); /* Slightly move up */
+}
+
+#tooltip.visible {
+    opacity: 1; /* Show tooltip */
+    transform: translateY(0); /* Move to original position */
+}

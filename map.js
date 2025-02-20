@@ -100,22 +100,45 @@
                     .domain([0, d3.max(stations, (d) => d.totalTraffic)])
                     .range([0, 25]);
                 
-              // Append circles to the SVG for each station
-              circles = svg.selectAll('circle')
-                    .data(stations)
-                    .enter()
-                    .append('circle')
-                    .attr('r',d => radiusScale(d.totalTraffic))               // Radius of the circle
-                    .attr('fill', 'steelblue')  // Circle fill color
-                    .attr('stroke', 'white')    // Circle border color
-                    .attr('stroke-width', 1)    // Circle border thickness
-                    .attr('opacity', 0.8)      // Circle opacity
-                    .each(function(d) { // iterates over each circle
-                        // Add <title> for browser tooltips
-                        d3.select(this)
-                          .append('title') //appends a title elements
-                          .text(`${d.totalTraffic} trips (${d.departures} departures, ${d.arrivals} arrivals)`);
-                      }); 
+            //   // Append circles to the SVG for each station
+            //   circles = svg.selectAll('circle')
+            //         .data(stations)
+            //         .enter()
+            //         .append('circle')
+            //         .attr('r',d => radiusScale(d.totalTraffic))               // Radius of the circle
+            //         .attr('fill', 'steelblue')  // Circle fill color
+            //         .attr('stroke', 'white')    // Circle border color
+            //         .attr('stroke-width', 1)    // Circle border thickness
+            //         .attr('opacity', 0.8)      // Circle opacity
+            //         .each(function(d) { // iterates over each circle
+            //             // Add <title> for browser tooltips
+            //             d3.select(this)
+            //               .append('title') //appends a title elements
+            //               .text(`${d.totalTraffic} trips (${d.departures} departures, ${d.arrivals} arrivals)`);
+            //           }); 
+            circles = svg.selectAll('circle')
+                .data(stations)
+                .enter()
+                .append('circle')
+                .attr('r', d => radiusScale(d.totalTraffic))  // Radius of the circle
+                .attr('fill', 'steelblue')  // Circle fill color
+                .attr('stroke', 'white')    // Circle border color
+                .attr('stroke-width', 1)    // Circle border thickness
+                .attr('opacity', 0.8)       // Circle opacity
+                .on('mouseover', function(event, d) {
+                    const tooltip = d3.select('#tooltip');
+                    tooltip.classed('hidden', false)
+                           .classed('visible', true)
+                           .html(`${d.totalTraffic} trips<br>(${d.departures} departures, ${d.arrivals} arrivals)`);
+                })
+                .on('mousemove', function(event) {
+                    const tooltip = d3.select('#tooltip');
+                    tooltip.style('left', (event.pageX + 10) + 'px')
+                        .style('top', (event.pageY - 10) + 'px');
+                })
+                .on('mouseout', function() {
+                    d3.select('#tooltip').classed('hidden', true).classed('visible', false);
+                });
     
                 // Initial position update when map loads
                 updatePositions();
