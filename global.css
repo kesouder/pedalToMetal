@@ -118,7 +118,7 @@ input[type="range"] {
     ); 
 }
 
-#name, a {
+#name {
     font-family: Arial, sans-serif;
     font-size: 16px; /* Adjust the size as needed */
     color: #333; /* Adjust the color as needed */
@@ -127,8 +127,4 @@ input[type="range"] {
     /* border-bottom: 1px solid #333; Add a bottom border */
     display: inline-block; /* Ensure they are inline */
     margin-top: .5em;;
-}
-
-a:hover {
-    color: #007BFF; /* Change color on hover */
 }
