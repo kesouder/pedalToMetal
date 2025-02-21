@@ -47,24 +47,72 @@ input[type="range"] {
     transform: translateY(-50%);
 }
 
-  #tooltip {
+#tooltip {
     position: absolute;
-    background: white; 
-    border: 1px solid #ff7e5f; /* Vibrant border color */
-    padding: 10px;
-    border-radius: 8px; /* More rounded corners */
+    background: white;
+    border: 1px solid #ff7e5f;
+    padding: 8px;
+    border-radius: 8px;
     pointer-events: none;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); /* Slightly larger shadow */
-    font-size: 14px; /* Slightly larger font */
-    font-family: 'Arial', sans-serif; /* Change font */
-    color: black; /* White text color */
-    z-index: 10;
-    /* transition: opacity 0.3s ease, transform 0.3s ease; Smooth transition for opacity and transform */
-    opacity: 0; /* Initially hidden */
-    transform: translateY(-10px); /* Slightly move up */
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+    font-size: 14px;
+    font-family: Arial, sans-serif;
+    color: black;
+    z-index: 1000; /* Ensure tooltip appears on top */
+    opacity: 0; /* Start hidden */
+    transition: opacity 0.1s ease-in-out;
 }
 
 #tooltip.visible {
-    opacity: 1; /* Show tooltip */
-    transform: translateY(0); /* Move to original position */
+    opacity: 1;
+}
+
+
+:root {
+    --color-departures: steelblue;
+    --color-balanced: rgb(177, 3, 177); 
+    --color-arrivals: darkorange; 
+}
+
+/* ✅ Legend Container */
+.legend {
+    display: flex;
+    align-items: center;
+    gap: 24px; /* Creates spacing between items */
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    color: #555;
+    margin-top: 10px;
+}
+
+/* ✅ Adds the "LEGEND:" label */
+.legend::before {
+    content: "LEGEND:";
+    font-weight: bold;
+    color: #999;
+    margin-right: 10px;
+}
+
+/* ✅ Flexbox for Swatches and Text */
+.legend div {
+    display: flex;
+    align-items: center;
+    gap: 8px; /* Small gap between swatch and text */
+    --departure-ratio: attr(style --departure-ratio number); /* Ensures correct parsing */
+}
+
+/* ✅ Swatch Styling */
+.legend div::before {
+    content: "";
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    border: 1px solid black;
+    background: color-mix(
+        in oklch,
+        var(--color-departures) calc(100% * var(--departure-ratio)),
+        var(--color-arrivals)
+    ); /* ✅ Uses color-mix to blend colors */
 }

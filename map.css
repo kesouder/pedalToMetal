@@ -30,4 +30,13 @@ html, body {
     fill: royalblue;
     stroke: white;
     pointer-events: auto;
+
+    --color-departures: steelblue;
+    --color-arrivals: darkorange;
+    --color: color-mix(
+        in oklch,
+        var(--color-departures) calc(100% * var(--departure-ratio)),
+        var(--color-arrivals)
+    );
+    fill: var(--color) !important;
 }

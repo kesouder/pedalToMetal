@@ -29,7 +29,6 @@ function updatePositions() {
 }
 
 // Initialize filtered data structures
-// let filteredTrips = [];
 let filteredArrivals = new Map();
 let filteredDepartures = new Map();
 let filteredStations = [];
@@ -43,6 +42,8 @@ function minutesSinceMidnight(date) {
 
 let timeFilter = -1; 
 let globalMaxTraffic = 1; // Store global max traffic for full dataset
+
+let stationFlow = d3.scaleQuantize().domain([0, 1]).range([0, 0.5, 1]);
 
 function filterByMinute(tripsByMinute, minute) {
     // Normalize both to the [0, 1439] range
@@ -93,31 +94,52 @@ function filterByMinute(tripsByMinute, minute) {
 
     // **Update circles dynamically**
     circles = svg.selectAll('circle')
-        .data(filteredStations, d => d.short_name)
-        .join(
-            enter => enter.append('circle')
-                .attr('r', d => radiusScale(d.totalTraffic))
-                .attr('fill', 'steelblue')
-                .attr('stroke', 'white')
-                .attr('stroke-width', 1)
-                .attr('opacity', 0.8)
-                .on('mouseover', function(event, d) {
-                    const tooltip = d3.select('#tooltip');
-                    tooltip.classed('hidden', false)
-                        .classed('visible', true)
-                        .html(`${d.totalTraffic} trips<br>(${d.departures} departures, ${d.arrivals} arrivals)`);
-                })
-                .on('mousemove', function(event) {
-                    const tooltip = d3.select('#tooltip');
-                    tooltip.style('left', (event.pageX + 10) + 'px')
-                        .style('top', (event.pageY - 10) + 'px');
-                })
-                .on('mouseout', function() {
-                    d3.select('#tooltip').classed('hidden', true).classed('visible', false);
-                }),
-            update => update.transition().duration(500)
-                .attr('r', d => radiusScale(d.totalTraffic))
-        );
+    .data(filteredStations, d => d.short_name)
+    .join(
+        enter => enter.append('circle')
+            .attr('r', d => radiusScale(d.totalTraffic))
+            .attr('stroke', 'white')
+            .attr('stroke-width', 1)
+            .attr('opacity', 0.8)
+            .on('mouseover', function(event, d) {
+                d3.select('#tooltip')
+                    .classed('hidden', false)
+                    .classed('visible', true)
+                    .html(`${d.totalTraffic} trips<br>(${d.departures} departures, ${d.arrivals} arrivals)`);
+            })
+            .on('mousemove', function(event) {
+                let tooltip = d3.select('#tooltip');
+
+                // Get tooltip dimensions
+                let tooltipWidth = tooltip.node().offsetWidth;
+                let tooltipHeight = tooltip.node().offsetHeight;
+
+                // Default position near cursor
+                let left = event.pageX + 15;
+                let top = event.pageY + 15;
+
+                // Prevent tooltip from going off the right edge
+                if (left + tooltipWidth > window.innerWidth) {
+                    left = event.pageX - tooltipWidth - 15;
+                }
+
+                // Prevent tooltip from going off the bottom edge
+                if (top + tooltipHeight > window.innerHeight) {
+                    top = event.pageY - tooltipHeight - 15;
+                }
+
+                tooltip.style('left', `${left}px`).style('top', `${top}px`);
+            })
+            .on('mouseout', function() {
+                d3.select('#tooltip')
+                    .classed('hidden', true)
+                    .classed('visible', false);
+            }),
+        update => update.transition().duration(500)
+            .attr('r', d => radiusScale(d.totalTraffic))
+    );
+
+    circles.style("--departure-ratio", d => stationFlow(d.departures / d.totalTraffic));
 
     updatePositions();
 }
@@ -217,3 +239,4 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // end of DOM
 });
+
