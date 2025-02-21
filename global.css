@@ -23,9 +23,11 @@ header label{
 }
 
 input[type="range"] {
-    width: calc(110% - 2em); /* Set the width of the slider */
-    margin-right: 1em; /* Add some margin to the right */
+    width: 100%;  /* Make the slider full width */
+    max-width: 600px;  /* Optional: Set a reasonable max width */
+    margin-right: 1em; /* Keeps spacing */
 }
+
 
 #selectedTime {
     display: block;
