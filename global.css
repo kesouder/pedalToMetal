@@ -74,7 +74,7 @@ input[type="range"] {
     --color-arrivals: darkorange; 
 }
 
-/* ✅ Legend Container */
+/* Legend Container */
 .legend {
     display: flex;
     align-items: center;
@@ -84,9 +84,10 @@ input[type="range"] {
     font-weight: 500;
     color: #555;
     margin-top: 10px;
+    margin-bottom: 1em;
 }
 
-/* ✅ Adds the "LEGEND:" label */
+/* Adds the "LEGEND:" label */
 .legend::before {
     content: "LEGEND:";
     font-weight: bold;
@@ -94,7 +95,7 @@ input[type="range"] {
     margin-right: 10px;
 }
 
-/* ✅ Flexbox for Swatches and Text */
+/* Flexbox for Swatches and Text */
 .legend div {
     display: flex;
     align-items: center;
@@ -102,7 +103,7 @@ input[type="range"] {
     --departure-ratio: attr(style --departure-ratio number); /* Ensures correct parsing */
 }
 
-/* ✅ Swatch Styling */
+/* Swatch Circle */
 .legend div::before {
     content: "";
     display: inline-block;
@@ -114,5 +115,20 @@ input[type="range"] {
         in oklch,
         var(--color-departures) calc(100% * var(--departure-ratio)),
         var(--color-arrivals)
-    ); /* ✅ Uses color-mix to blend colors */
+    ); 
+}
+
+#name, a {
+    font-family: Arial, sans-serif;
+    font-size: 16px; /* Adjust the size as needed */
+    color: #333; /* Adjust the color as needed */
+    text-decoration: none; /* Remove underline from the link */
+    margin: 0 5px 0 0; /* Adjust the margin to bring them closer */
+    /* border-bottom: 1px solid #333; Add a bottom border */
+    display: inline-block; /* Ensure they are inline */
+    margin-top: .5em;;
+}
+
+a:hover {
+    color: #007BFF; /* Change color on hover */
 }
